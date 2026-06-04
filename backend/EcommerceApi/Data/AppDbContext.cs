@@ -17,6 +17,10 @@ namespace EcommerceApi.Data
 
         public DbSet<Wallet> Wallets { get; set; }
 
+        // Inside Data/AppDbContext.cs
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            modelBuilder.Entity<User>()

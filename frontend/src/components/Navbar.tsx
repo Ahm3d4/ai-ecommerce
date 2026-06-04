@@ -1,11 +1,12 @@
 // 📁 src/components/Navbar.tsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export const Navbar = () => {
   const { user, isAuthenticated, balance, logout } = useAuth(); // 🆕 Added balance extraction
   const navigate = useNavigate();
-
+  const { getCartCount } = useCart(); // 🆕 Grab live basket item count
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -54,6 +55,26 @@ export const Navbar = () => {
             onMouseLeave={(e) => e.currentTarget.style.borderColor = '#2e303a'}
             >
               💳 <span>${balance.toFixed(2)}</span>
+            </Link>
+
+                  <Link to="/cart" style={{
+              textDecoration: 'none',
+              backgroundColor: '#1f2028',
+              border: '1px solid #2e303a',
+              padding: '6px 14px',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              color: '#c084fc',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = '#c084fc'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#2e303a'}
+            >
+              🛒 <span>({getCartCount()})</span>
             </Link>
 
             {/* USER PROFILE INFO ROW */}

@@ -1,7 +1,7 @@
 // 📁 src/components/Home.tsx
 import { useEffect, useState } from 'react';
 import { fetchProducts, type Product } from '../services/api';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../context/CartContext';
 import { ProductCard } from './ProductCard';
 import { useAuth } from '../context/AuthContext';
 import { AdminPanel } from './AdminPanel';

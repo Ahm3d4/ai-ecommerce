@@ -36,8 +36,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (savedToken && savedUser) {
             setToken(savedToken);
             setUser(JSON.parse(savedUser));
-        }
+
+            fetch('http://localhost:5047/api/wallets', {
+      headers: { 
+        'Authorization': `Bearer ${savedToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Sync failure");
+        return res.json();
+      })
+      .then(data => {
+        setBalance(data.balance); // Injects the true balance into the context cloud
+        setIsLoading(false);      // Unlocks the screen rendering guard
+      })
+      .catch(err => {
+        console.error("Failed to restore wallet balance on app boot:", err);
         setIsLoading(false);
+      });
+  } else {
+    // No active user credentials found in browser cookies, clear down flags cleanly
+    setIsLoading(false);
+        }
+        
     }, []);
 
     const login = async (email: string, password: string) => {

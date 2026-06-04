@@ -22,7 +22,7 @@ namespace EcommerceApi.Models
         public decimal Price { get; set; }
 
         [Required]
-        public int StockQuantity { get; set; }
+        public int StockQuantity { get; set; } = 0;
 
         public string ImageUrl { get; set; } = string.Empty;
 
