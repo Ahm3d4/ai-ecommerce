@@ -6,10 +6,17 @@ import { useCart } from '../context/CartContext';
 export const Navbar = () => {
   const { user, isAuthenticated, balance, logout } = useAuth(); // 🆕 Added balance extraction
   const navigate = useNavigate();
-  const { getCartCount } = useCart(); // 🆕 Grab live basket item count
+  const { getCartCount , searchQuery, setSearchQuery} = useCart(); // 🆕 Grab live basket item count
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    // 🆕 If the user searches while looking at their profile or cart, kick them back to home catalog automatically
+    if (window.location.pathname !== '/') {
+      navigate('/');
+    }
   };
 
   return (
@@ -31,7 +38,27 @@ export const Navbar = () => {
             NextGen<span style={{ color: '#c084fc' }}>Hardware</span>
           </h3>
         </Link>
-        
+        <div style={{ flex: '0 1 400px', margin: '0 20px' }}>
+        <input
+          type="text"
+          placeholder="Search components (e.g., RTX 5080, DDR5)..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{
+            width: '100%',
+            backgroundColor: '#121212',
+            border: '1px solid #2e303a',
+            borderRadius: '6px',
+            padding: '8px 14px',
+            color: '#fff',
+            fontSize: '14px',
+            outline: 'none',
+            transition: 'border-color 0.2s'
+          }}
+          onFocus={(e) => e.currentTarget.style.borderColor = '#646cff'}
+          onBlur={(e) => e.currentTarget.style.borderColor = '#2e303a'}
+        />
+      </div>
         {/* USER UTILITY CONTROLS */}
         {isAuthenticated ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>

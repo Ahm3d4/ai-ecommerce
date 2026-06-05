@@ -10,11 +10,10 @@ import { useNavigate } from 'react-router-dom'; // 🆕 1. Import useNavigate ho
 
 export const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>(''); // 🆕 State for tracking user search input
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { cart, addToCart, removeFromCart, getCartTotal, getCartCount } = useCart();
+  const { cart, addToCart, removeFromCart, getCartTotal, getCartCount, searchQuery } = useCart();
   const { token, user } = useAuth();
   const navigate = useNavigate(); // 🆕 2. Initialize the navigation director instance
 
@@ -60,7 +59,6 @@ export const Home = () => {
       )}
 
       {/* 🆕 SEARCH BAR INJECTION VIEW LAYER */}
-      <SearchBar query={searchQuery} setQuery={setSearchQuery} />
 
       <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '40px' }}>
         {/* Left Column: Product Catalog */}

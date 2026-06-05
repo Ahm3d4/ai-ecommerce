@@ -10,6 +10,8 @@ export interface CartItem {
 
 interface CartContextType {
     cart: CartItem[];
+    searchQuery: string;               // 🆕 Track search string globally
+    setSearchQuery: (query: string) => void;
     addToCart: (product: Product) => void;
     removeFromCart: (productId: number) => void;
     clearCart: () => void;
@@ -26,6 +28,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         return savedCart ? JSON.parse(savedCart) : [];
     });
 
+    const [searchQuery, setSearchQuery] = useState<string>('');
     // Automatically sync the cart data to localStorage whenever it changes globally
     useEffect(() => {
         localStorage.setItem('nextgen_cart', JSON.stringify(cart));
@@ -68,7 +71,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, getCartTotal, getCartCount }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, getCartTotal, getCartCount, searchQuery, setSearchQuery(query) {
+            
+        }, }}>
             {children}
         </CartContext.Provider>
     );
