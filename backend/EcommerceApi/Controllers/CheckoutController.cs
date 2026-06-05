@@ -100,6 +100,29 @@ namespace EcommerceApi.Controllers
                 return StatusCode(500, $"An error occurred during transaction checkout handling: {ex.Message}");
             }
         }
+        // 📁 Controllers/CheckoutController.cs -> Add inside the CheckoutController class
+
+            [HttpGet("history")]
+public async Task<IActionResult> GetOrderHistory()
+{
+    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+    if (userId == 0) return Unauthorized("Invalid user session.");
+
+    var orders = await _context.Orders
+        .Where(o => o.UserId == userId)
+        .Include(o => o.OrderItems)
+        .ThenInclude(oi => oi.Product)
+        .OrderByDescending(o => o.OrderDate)
+        .ToListAsync();
+
+    // 🆕 FORCE EXPLICIT RETURN: If null or empty, send a clean JSON array structure back!
+    if (orders == null || !orders.Any())
+    {
+        return Ok(new List<Order>()); 
+    }
+
+    return Ok(orders);
+}
     }
 
     public class CartItemDto

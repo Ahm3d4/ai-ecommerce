@@ -6,6 +6,7 @@ import { ProductCard } from './ProductCard';
 import { useAuth } from '../context/AuthContext';
 import { AdminPanel } from './AdminPanel';
 import { SearchBar } from './SearchBar'; // 🆕 Import our SearchBar component
+import { useNavigate } from 'react-router-dom'; // 🆕 1. Import useNavigate hook
 
 export const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,6 +16,7 @@ export const Home = () => {
 
   const { cart, addToCart, removeFromCart, getCartTotal, getCartCount } = useCart();
   const { token, user } = useAuth();
+  const navigate = useNavigate(); // 🆕 2. Initialize the navigation director instance
 
   const loadStoreInventory = () => {
     fetchProducts()
@@ -95,12 +97,14 @@ export const Home = () => {
                       {item.quantity} x ${item.product.price.toFixed(2)}
                     </span>
                   </div>
+                  
                   <button 
                     onClick={() => removeFromCart(item.product.id)}
                     style={{ backgroundColor: '#d32f2f', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
                   >
                     Remove
                   </button>
+                  
                 </div>
               ))}
               <div style={{ borderTop: '2px solid #333', paddingTop: '20px', marginTop: '20px' }}>
@@ -108,9 +112,12 @@ export const Home = () => {
                   <span>Total:</span>
                   <span style={{ color: '#4caf50' }}>${getCartTotal().toFixed(2)}</span>
                 </h3>
-                <button style={{ width: '100%', marginTop: '20px', backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
+                
+                <button onClick={() => navigate('/cart')} style={{ width: '100%', marginTop: '20px', backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
                   Proceed to Checkout
                 </button>
+                
+
               </div>
             </div>
           )}

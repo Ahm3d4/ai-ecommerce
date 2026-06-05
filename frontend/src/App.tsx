@@ -8,6 +8,7 @@ import { Home } from './components/Home';
 import { ProductDetails } from './components/ProductDetails'; // 🆕 Import Details Component
 import { useAuth } from './context/AuthContext'; 
 import { Profile } from './components/Profile';
+import { Cart } from './components/Cart'; // 🆕 Import the Cart view component
 
 function App() {
   const [authView, setAuthView] = useState<'login' | 'register'>('login');
@@ -52,6 +53,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} /> {/* 🆕 Added checkout pathway */}
           </Routes>
 
         </div>

@@ -2,6 +2,7 @@
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { WalletView } from './WalletView'; // 🆕 Import the new wallet widget
+import { OrderHistory } from './OrderHistory'; // 🆕 Import your new history engine
 
 export const Profile = () => {
   const { user, token, logout } = useAuth();
@@ -52,6 +53,9 @@ export const Profile = () => {
         </div>
       </div>
       <WalletView />
+      <div style={{ marginTop: '40px' }}>
+        <OrderHistory />
+      </div>
 
       {/* Advanced Security Auditing Block */}
       <div style={{ backgroundColor: '#16171d', border: '1px solid #2e303a', borderRadius: '8px', padding: '25px' }}>
