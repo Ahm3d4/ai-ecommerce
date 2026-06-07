@@ -4,18 +4,16 @@ import { fetchProducts, type Product } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from './ProductCard';
 import { useAuth } from '../context/AuthContext';
-import { AdminPanel } from './AdminPanel';
-import { SearchBar } from './SearchBar'; // 🆕 Import our SearchBar component
-import { useNavigate } from 'react-router-dom'; // 🆕 1. Import useNavigate hook
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { cart, addToCart, removeFromCart, getCartTotal, getCartCount, searchQuery } = useCart();
-  const { token, user } = useAuth();
-  const navigate = useNavigate(); // 🆕 2. Initialize the navigation director instance
+  // 🆕 Pull searchQuery and functions directly out of global context stream
+  const { cart, addToCart, removeFromCart, getCartTotal, searchQuery } = useCart();
+  const { token, } = useAuth();
 
   const loadStoreInventory = () => {
     fetchProducts()
@@ -33,7 +31,7 @@ export const Home = () => {
     loadStoreInventory();
   }, [token]);
 
-  // 🆕 FILTER LOGIC: Checks both the item title and description for matching characters
+  // Filters using the global state string updated by Navbar
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -44,35 +42,19 @@ export const Home = () => {
 
   return (
     <>
-      <header style={{ borderBottom: '1px solid #333', paddingBottom: '20px', marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: 0, color: '#646cff' }}>AI NextGen Store</h1>
-          <p style={{ color: '#aaa', margin: '5px 0 0 0' }}>Powered by React, .NET Core, & MySQL</p>
-        </div>
-        <div style={{ backgroundColor: '#333', padding: '10px 20px', borderRadius: '20px', fontWeight: 'bold' }}>
-          🛒 Items: {getCartCount()}
-        </div>
-      </header>
+      
 
-      {user?.role === 'Admin' && (
-        <AdminPanel onProductAdded={loadStoreInventory} />
-      )}
-
-      {/* 🆕 SEARCH BAR INJECTION VIEW LAYER */}
-
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '40px', marginTop: '20px' }}>
         {/* Left Column: Product Catalog */}
         <section>
           <h2>Featured Hardware Products</h2>
           
-          {/* 🆕 Fallback conditional display if no inventory specs align with search input */}
           {filteredProducts.length === 0 ? (
             <div style={{ padding: '40px 0', color: '#9ca3af', textAlign: 'center', fontSize: '16px' }}>
               No hardware components match your search term "{searchQuery}".
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
-              {/* 🆕 Loop through filtered array instead of original products array */}
               {filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
               ))}
@@ -95,14 +77,12 @@ export const Home = () => {
                       {item.quantity} x ${item.product.price.toFixed(2)}
                     </span>
                   </div>
-                  
                   <button 
                     onClick={() => removeFromCart(item.product.id)}
                     style={{ backgroundColor: '#d32f2f', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
                   >
                     Remove
                   </button>
-                  
                 </div>
               ))}
               <div style={{ borderTop: '2px solid #333', paddingTop: '20px', marginTop: '20px' }}>
@@ -111,11 +91,11 @@ export const Home = () => {
                   <span style={{ color: '#4caf50' }}>${getCartTotal().toFixed(2)}</span>
                 </h3>
                 
-                <button onClick={() => navigate('/cart')} style={{ width: '100%', marginTop: '20px', backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
-                  Proceed to Checkout
-                </button>
-                
-
+                <Link to="/cart" style={{ textDecoration: 'none', width: '100%', display: 'block' }}>
+                  <button style={{ width: '100%', marginTop: '20px', backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>
+                    Proceed to Checkout
+                  </button>
+                </Link>
               </div>
             </div>
           )}

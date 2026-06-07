@@ -30,8 +30,9 @@ namespace EcommerceApi.Controllers
             if (user == null) 
                 return Unauthorized("Invalid email address.");
 
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password);
             // 2. Verify password (⚠️ Note: In a production environment, use password hashing like BCrypt!)
-            if (user.Password != loginDto.Password) 
+            if (!isPasswordValid) 
                 return Unauthorized("Invalid password.");
 
             // 3. Generate the secure JWT token string using our service
@@ -59,11 +60,12 @@ public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     if (userExists)
         return BadRequest("This email address is already registered.");
 
+    string securePasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
     // 2. Map the DTO data over to a brand new User model object
     var newUser = new User
     {
         Email = registerDto.Email.ToLower(),
-        Password = registerDto.Password, // ⚠️ In the next step, we should hash this!
+        Password = securePasswordHash, // ⚠️ In the next step, we should hash this!
         FullName = registerDto.FullName,
         Role = "Customer" // New signups default to standard Customer tier
     };

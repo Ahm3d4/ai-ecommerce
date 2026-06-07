@@ -71,9 +71,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, getCartTotal, getCartCount, searchQuery, setSearchQuery(query) {
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, getCartTotal, getCartCount, searchQuery, setSearchQuery
             
-        }, }}>
+         }}>
             {children}
         </CartContext.Provider>
     );

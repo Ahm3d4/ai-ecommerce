@@ -42,17 +42,8 @@ namespace EcommerceApi.Controllers
         }
 
         // POST: api/products (Used by Admin to add new items)
-        [HttpPost]
-        [Authorize(Roles = "Admin")] // ◄── Only allows users whose JWT token contains the 'Admin' role
-        public async Task<IActionResult> AddProduct([FromBody] Product newProduct)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        
 
-            _context.Products.Add(newProduct);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(AddProduct), new { id = newProduct.Id }, newProduct);
-        }
     }
 }

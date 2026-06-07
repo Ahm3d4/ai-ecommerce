@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer; // 🆕 Required for default authentication schemas
 using Microsoft.IdentityModel.Tokens;               // 🆕 Required for symmetric security keys
 using System.Text;
+using EcommerceApi.Middleware; // ◄── Add your namespace reference import
 
 namespace EcommerceApi;
 
@@ -61,6 +62,7 @@ public class Program
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
+        app.UseMiddleware<ExceptionMiddleware>();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
